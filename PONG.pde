@@ -1,3 +1,9 @@
+///
+///PONG
+///José Enrique Maese Álvarez
+///IES VIcente Aleixandre 2ºBachillerato
+///
+
 //Introducimos variables de la bola
 float bolaposX=0;
 float bolaposY=0;
