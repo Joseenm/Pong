@@ -1,7 +1,7 @@
 ///
 ///PONG
 ///José Enrique Maese Álvarez
-///IES VIcente Aleixandre 2ºBachillerato
+///IES Vicente Aleixandre 2ºBachillerato
 ///
 
 //Introducimos variables de la bola
