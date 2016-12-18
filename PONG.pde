@@ -188,7 +188,7 @@ if((bolaposY+bolaR>=palaposY) && (palaposX-palalong/2<bolaposX) && (palaposX+pal
 }
 
 
-//REBOTE DE LA BOLA
+//AUMENTO VELOCIDAD DE LA BOLA
 
 void aumentoVelocidad(){
 if((bolaposY+bolaR>=palaposY) && (palaposX-palalong/2<bolaposX) && (palaposX+palalong/2>bolaposX) && (bolaVY<10)){    //Aumentamos la velocidad cada vez que la bola rebote en la pala
