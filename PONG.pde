@@ -7,9 +7,13 @@
 //Introducimos variables de la bola
 float bolaposX=0;
 float bolaposY=0;
-float bolaVX=random(3,5);   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
-float bolaVY=random(-3,-5);  
+float bolaVX=4;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
+float bolaVY=-4;  
+float bolaVXmax=7;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
+float bolaVYmin=-7;
+float bolaVYmax;
 float bolaR=12;
+float difPos;
 
 //Introducimos variables de la pala
 float palaposX=0;
@@ -19,7 +23,6 @@ float palalong=0;
 //Introducimos variables generales
 int vidas = 3;
 int pantalla=0;
-int press=0;
 int puntos=0;
 
 
@@ -32,6 +35,9 @@ background(255);
 //Iniciamos variales de la bola
 bolaposX= width/2;
 bolaposY= height/2;
+bolaVXmax=8;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
+bolaVYmin=-4;
+bolaVYmax=-8;
 
 //Iniciamos variables de la pala
 palalong=width/7;
@@ -41,6 +47,7 @@ palaposY=height-height/10;
 //Iniciamos variables generales
 pantalla=0;
 vidas=3;
+bolaVYmax=sqrt(sq(bolaVXmax)+sq(bolaVYmin));
 }
 
 
@@ -54,10 +61,10 @@ void draw(){
     Juego();  //Comienza el juego
     break;
     case 2:
-    Final();  //Fin del juego
+    Final();  //Fin del juego: has perdido
     break;
     case 3:
-    Ganar();  //Fin del juego
+    Ganar();  //Fin del juego: has ganado
     break;
   }
 }
@@ -69,6 +76,11 @@ void inicioVariables(){
   palalong=width/7;
   palaposX=width/2;
   palaposY=height-height/10;
+  bolaVX=4;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
+  bolaVY=-4;
+  bolaVXmax=7;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
+  bolaVYmin=-7;
+  bolaVYmax=sqrt(sq(bolaVXmax)+sq(bolaVYmin));
 }
 
 
@@ -100,6 +112,7 @@ textAlign(RIGHT);
 text(vidas + " VIDAS", width-width/20, height/20);
 textAlign(LEFT);
 text("PUNTOS: " + puntos, width/20, height/20);
+difPos=bolaposX-mouseX;
 dibujarPala();
 dibujarBola();
 moverPala();
@@ -169,6 +182,7 @@ void mouseClicked () {   //Definimos la acción al pasar el mouse por los botone
     vidas=3;
     puntos=0;
     pantalla=1;
+    inicioVariables();
   }
 }
 
@@ -179,10 +193,9 @@ void terminarPartida(){
   if (bolaposY>=height-height/15){  
    vidas=vidas-1;
    inicioVariables();
-   bolaVY=bolaVY*-1;
   }
   if (vidas==0) pantalla=2;
-  if (puntos==1) pantalla=3;
+  if (puntos==5) pantalla=3;
 }
 
 
@@ -241,8 +254,16 @@ bolaVY=bolaVY*-1;
 //REBOTE DE LA BOLA
 
 void reboteBola(){
-if((bolaposY+bolaR>=palaposY) && (palaposX-palalong/2<bolaposX) && (palaposX+palalong/2>bolaposX)){
-  bolaVY=bolaVY*random(-0.8,-1.2);
+  if ( difPos<=palalong/2+bolaR && difPos>=-(palalong/2+bolaR) && bolaposY>=height*9/10-bolaR) { 
+
+  bolaVYmax=sqrt(sq(bolaVXmax)+sq(bolaVYmin));
+
+  bolaVX= difPos*bolaVXmax/(palalong/2+bolaR);
+  if (difPos <0) {
+    bolaVY= -(-difPos*(bolaVYmin-bolaVYmax)/(palalong/2+bolaR)+bolaVYmax);
+  } else {
+    bolaVY= -(difPos*(bolaVYmin-bolaVYmax)/(palalong/2+bolaR)+bolaVYmax);
+  }
 }
 }
 
@@ -250,8 +271,10 @@ if((bolaposY+bolaR>=palaposY) && (palaposX-palalong/2<bolaposX) && (palaposX+pal
 //AUMENTO VELOCIDAD DE LA BOLA
 
 void aumentoVelocidad(){
-if((bolaposY+bolaR>=palaposY) && (palaposX-palalong/2<bolaposX) && (palaposX+palalong/2>bolaposX) && (bolaVY<10)){    //Aumentamos la velocidad cada vez que la bola rebote en la pala
-  bolaVY=bolaVY+2;
+if((bolaposY+bolaR>=palaposY) && (palaposX-palalong/2<bolaposX) && (palaposX+palalong/2>bolaposX) && (bolaVY<14)){    //Aumentamos la velocidad cada vez que la bola rebote en la pala
+  bolaVYmax=bolaVYmax-1;
+  bolaVYmin=bolaVYmin-1;
+  bolaVXmax=bolaVXmax+1;
   puntos=puntos+1;
 }
 }
