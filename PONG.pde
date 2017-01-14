@@ -4,15 +4,17 @@
 ///IES Vicente Aleixandre 2ºBachillerato
 ///
 
+Bloque[] miBloque = new Bloque[7];
+
 //Introducimos variables de la bola
 float bolaposX=0;
 float bolaposY=0;
 float bolaVX=4;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
 float bolaVY=-4;  
-float bolaVXmax=7;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
-float bolaVYmin=-7;
-float bolaVYmax;
-float bolaR=12;
+float bolaVXmax=4;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
+float bolaVYmin=-4;
+float bolaVYmax=-4;
+float bolaR=15;
 float difPos;
 
 //Introducimos variables de la pala
@@ -24,20 +26,25 @@ float palalong=0;
 int vidas = 3;
 int pantalla=0;
 int puntos=0;
-
+int c;
 
 void setup(){
   
 //Limpiamos la pantalla
-size(500,400);
+size(650,650);
 background(255);
+
+//Bloques
+  for (int i=0; i< 7; i++) {
+    miBloque[i]= new Bloque((width/miBloque.length*i)+width/14, height/7);
+  }
 
 //Iniciamos variales de la bola
 bolaposX= width/2;
 bolaposY= height/2;
-bolaVXmax=8;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
-bolaVYmin=-4;
-bolaVYmax=-8;
+//bolaVXmax=4; 
+//bolaVYmin=-4;
+//bolaVYmax=-4;
 
 //Iniciamos variables de la pala
 palalong=width/7;
@@ -47,7 +54,8 @@ palaposY=height-height/10;
 //Iniciamos variables generales
 pantalla=0;
 vidas=3;
-bolaVYmax=sqrt(sq(bolaVXmax)+sq(bolaVYmin));
+bolaVYmax=sqrt(sq(bolaVYmax)+sq(bolaVYmin));
+c=color(255);
 }
 
 
@@ -78,9 +86,10 @@ void inicioVariables(){
   palaposY=height-height/10;
   bolaVX=4;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
   bolaVY=-4;
-  bolaVXmax=7;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
-  bolaVYmin=-7;
+  bolaVXmax=4;   //Definimos unas velocidades aleatorias entre dos números para mayor variedad de partidas
+  bolaVYmin=-4;
   bolaVYmax=sqrt(sq(bolaVXmax)+sq(bolaVYmin));
+  c=color(255);
 }
 
 
@@ -112,9 +121,14 @@ textAlign(RIGHT);
 text(vidas + " VIDAS", width-width/20, height/20);
 textAlign(LEFT);
 text("PUNTOS: " + puntos, width/20, height/20);
+//fill(255);
+//stroke(bolaposX*255/width);      //Definimos las líneas y colores del botón
+//strokeWeight(height/20);
+//rect(width/2, height/2, width, height);
 difPos=bolaposX-mouseX;
 dibujarPala();
 dibujarBola();
+iniciarBloques();
 moverPala();
 moverBola();
 aumentoVelocidad();
@@ -187,6 +201,47 @@ void mouseClicked () {   //Definimos la acción al pasar el mouse por los botone
 }
 
 
+//BLOQUES
+
+void iniciarBloques(){
+  for (int i=0; i< 7; i++) {
+    miBloque[i].display();
+  }
+}
+
+class Bloque {
+  // DATOS 
+  float bloquePosX;  // posicion x del bloque
+  float bloquePosY;  // posicion y del bloque
+  float anchoBloque; // ancho del bloque
+  float altoBloque; // alto del bloque
+  float r;
+  float g;
+  float b;
+
+  // CONSTRUCTOR
+  Bloque(float xPosTemp, float yPosTemp) {
+    bloquePosX=xPosTemp;
+    bloquePosY=yPosTemp;
+    anchoBloque=20;
+    altoBloque=35;
+    r=random(0, 255);
+    g=random(0, 255);
+    b=random(0, 255);
+  }
+  // FUNCIONES
+  // dibuja de los bloques
+  void display() {
+
+    fill(r-50 ,g-50 ,b-50);
+    stroke(r, g, b);
+    strokeWeight(2);
+    rectMode(CENTER);
+    rect(bloquePosX, bloquePosY, altoBloque, anchoBloque);
+  }
+}
+
+
 //PERDER/GANAR PARTIDA
 
 void terminarPartida(){
@@ -195,7 +250,7 @@ void terminarPartida(){
    inicioVariables();
   }
   if (vidas==0) pantalla=2;
-  if (puntos==5) pantalla=3;
+  if (puntos==100) pantalla=3;
 }
 
 
@@ -215,7 +270,7 @@ void dibujarPala(){
 stroke(0);
 strokeWeight(1);
 fill(bolaposX*255/width);
-rect(mouseX, palaposY, palalong, 5);
+rect(mouseX, palaposY, palalong, height/80);
 }
 
 
@@ -272,9 +327,11 @@ void reboteBola(){
 
 void aumentoVelocidad(){
 if((bolaposY+bolaR>=palaposY) && (palaposX-palalong/2<bolaposX) && (palaposX+palalong/2>bolaposX) && (bolaVY<14)){    //Aumentamos la velocidad cada vez que la bola rebote en la pala
-  bolaVYmax=bolaVYmax-1;
-  bolaVYmin=bolaVYmin-1;
+  bolaVX=bolaVX+1; 
+  bolaVY=bolaVY-1;  
   bolaVXmax=bolaVXmax+1;
+  bolaVYmin=bolaVYmin-1;
+  bolaVYmax=bolaVYmax-1;
   puntos=puntos+1;
 }
 }
